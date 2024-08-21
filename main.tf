@@ -451,6 +451,7 @@ resource "github_team_repository" "team_repository_by_slug" {
       # Ignore changes to tags, e.g. because a management agent
       # updates these based on some ruleset managed elsewhere.
       etag,
+      team_id,
     ]
   }
 }
