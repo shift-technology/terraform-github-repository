@@ -445,7 +445,7 @@ resource "github_team_repository" "team_repository_by_slug" {
   team_id    = each.value.slug
   permission = each.value.permission
 
-  #depends_on = [var.module_depends_on]
+  depends_on = [var.module_depends_on]
   lifecycle {
     ignore_changes = [
       # Ignore changes to tags, e.g. because a management agent
