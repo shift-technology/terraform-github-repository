@@ -97,7 +97,7 @@ locals {
         users = []
         teams = []
         apps  = []
-    }, b.required_pull_request_reviews.bypass_pull_request_allowances)] : []
+    }, try(b.required_pull_request_reviews.bypass_pull_request_allowances,local.default_bypass_pull_request_allowances))] : []
   ]
 }
 
