@@ -92,12 +92,12 @@ locals {
 
   bypass_pull_request_allowances = [
     for b in local.branch_protections_v3 :
-    length(keys(try(b.required_pull_request_reviews.bypass_pull_request_allowances,local.default_bypass_pull_request_allowances))) > 0 ? [
+    length(keys(try(b.required_pull_request_reviews.bypass_pull_request_allowances,{}))) > 0 ? [
       merge({
         users = []
         teams = []
         apps  = []
-    }, try(b.required_pull_request_reviews.bypass_pull_request_allowances,local.default_bypass_pull_request_allowances))] : []
+    }, b.required_pull_request_reviews.bypass_pull_request_allowances)] : []
   ]
 }
 
