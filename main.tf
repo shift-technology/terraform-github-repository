@@ -82,6 +82,16 @@ locals {
         apps  = []
     }, b.restrictions)] : []
   ]
+
+  bypass_pull_request_allowances = [
+    for b in local.branch_protections_v3 :
+    length(keys(try(b.required_pull_request_reviews.bypass_pull_request_allowances,{}))) > 0 ? [
+      merge({
+        users = []
+        teams = []
+        apps  = []
+    }, b.required_pull_request_reviews.bypass_pull_request_allowances)] : []
+  ]
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -273,6 +283,14 @@ resource "github_branch_protection_v3" "branch_protection" {
       dismissal_teams                 = [for t in required_pull_request_reviews.value.dismissal_teams : replace(lower(t), "/[^a-z0-9_]/", "-")]
       require_code_owner_reviews      = required_pull_request_reviews.value.require_code_owner_reviews
       required_approving_review_count = required_pull_request_reviews.value.required_approving_review_count
+      dynamic "bypass_pull_request_allowances" {
+        for_each = local.bypass_pull_request_allowances[count.index]
+        content {
+          users = bypass_pull_request_allowances.value.users
+          teams = [for t in bypass_pull_request_allowances.value.teams : replace(lower(t), "/[^a-z0-9_]/", "-")]
+          apps  = bypass_pull_request_allowances.value.apps
+        }
+      }
     }
   }
 
